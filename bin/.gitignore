@@ -1,0 +1,4 @@
+# Ignore all the binary files that I generate
+bin/
+tmp/
+*.class

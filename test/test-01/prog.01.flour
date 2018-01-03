@@ -1,0 +1,8 @@
+/**
+ * prog.01.flour
+ *
+ * Test 01: print Hello World
+ */
+include io; // get the library to do basic io
+
+println("Hello world!); // print out Hello World!
