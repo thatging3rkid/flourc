@@ -1,0 +1,24 @@
+/**
+ * stdlib/io/text
+ *
+ * Standard I/O methods for processing text
+ *
+ * @note this is a very early library, so it will change (a lot)
+ *
+ * @author Connor Henley, @thatging3rkid
+ */
+c_include <stdio.h> as c_stdio
+
+func void print(string str) {
+    c_stdio.printf("%s", str.to_ptr());
+}
+
+func void print(string str, string end) {
+    c_stdio.printf("%s", str.to_ptr());
+    c_stdio.printf("%s", end.to_ptr());
+}
+
+func void println(string str) {
+    c_stdio.printf("%s", str.to_ptr());
+    c_stdio.printf("\n"); // note: this could be replaced with print(str, "\n"), but I haven't crossed that bridge yet
+}
