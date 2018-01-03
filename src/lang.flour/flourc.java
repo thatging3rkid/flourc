@@ -11,6 +11,7 @@ import com.sun.istack.internal.NotNull;
 import lang.flour.preprocessor.Preprocessor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,11 @@ public class flourc {
                 System.exit(1);
             }
 
-            Preprocessor fpp = new Preprocessor(temp);
+            try {
+                Preprocessor fpp = new Preprocessor(temp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

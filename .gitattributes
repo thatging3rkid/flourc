@@ -1,1 +1,2 @@
-*.flour linguist-language=Flour
+*.flour linguist-language=flour
+docs/* linguist-documentation

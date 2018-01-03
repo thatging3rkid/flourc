@@ -25,3 +25,8 @@ hs_err_pid*
 .idea/
 out/
 *.iml
+
+# llvm files and object files
+*.ll
+*.bc
+*.o
