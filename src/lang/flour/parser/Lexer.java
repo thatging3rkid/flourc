@@ -18,19 +18,39 @@ public class Lexer {
         CODE, FUNCTION, CLASS, BLOCK_COMMENT, LINE_COMMENT
     }
 
-    private BufferedReader br;
+    private FileReader reader;
     private StringBuilder stack;
     private List<Token> token_stream;
 
     public Lexer(File file) throws IOException {
-        this.br = new BufferedReader(new FileReader(file));
+        this.reader =new FileReader(file);
         this.stack = new StringBuilder();
         this.token_stream = new ArrayList<>();
 
         this._tokenize();
     }
 
-    private void _tokenize() {
+    private void _tokenize() throws IOException {
+
+        LexerState state = LexerState.CODE;
+        Character cur;
+
+        // Loop over each character
+        while ((cur = (char) this.reader.read()) != -1) {
+            this.stack.append(cur);
+
+            // Process existing states
+            if (state == LexerState.BLOCK_COMMENT) {
+                if (this.stack.toString().endsWith("*/")) {
+                    state = LexerState.CODE;
+                    this.stack = new StringBuilder();
+                }
+            }
+
+            if (this.stack.toString().endsWith("/*"))
+
+
+        }
 
     }
 

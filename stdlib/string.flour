@@ -1,0 +1,28 @@
+/**
+ * stdlib/string.flour
+ *
+ * This is a really early string class and will mostly be used for testing OOP lexing and code gen
+ *
+ * @author Connor Henley, @thatging3rkid
+ */
+c_import <stdlib.h> as c_stdlib
+
+public class string { // should implement the "is array" or "can iterate over" interface when it's ready
+    private char *data = null;
+    private int length = 0;
+
+    public string() {}
+
+    method int length() {
+        while true {
+
+        }
+    }
+}
+
+/**
+ * The purpose of the c string class is to interface with C libraries, so data should be stored in the flour.string
+ */
+public class c_str { // also should implement the same interface as a string
+
+}
