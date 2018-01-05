@@ -75,6 +75,34 @@ public class CharacterStack {
     }
 
     /**
+     * View a character at a position without removing it from the stack
+     *
+     * @param num the position in the stack to look at (where the top of the stack is 0)
+     * @return the character at that position if it exists, else 0
+     */
+    public Character peek(int num) {
+        try {
+            return this.list.get(this.list.size() - 1 - num);
+        } catch (IndexOutOfBoundsException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * See if all the characters in the stack are whitepsace characters
+     *
+     * @return true if all the characters in the stack are whitespace characters
+     */
+    public boolean isAllWhitespace() {
+        for (Character c : this.list) {
+            if (!LexerUtils.isWhitespace(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * @inherit-doc
      */
     @Override
