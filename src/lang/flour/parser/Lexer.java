@@ -7,6 +7,8 @@
  */
 package lang.flour.parser;
 
+import lang.flour.parser.utils.CharacterStack;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,12 @@ public class Lexer {
     }
 
     private FileReader reader;
-    private StringBuilder stack;
+    private CharacterStack stack;
     private List<Token> token_stream;
 
     public Lexer(File file) throws IOException {
-        this.reader =new FileReader(file);
-        this.stack = new StringBuilder();
+        this.reader = new FileReader(file);
+        this.stack = new CharacterStack();
         this.token_stream = new ArrayList<>();
 
         this._tokenize();
@@ -37,17 +39,30 @@ public class Lexer {
 
         // Loop over each character
         while ((cur = (char) this.reader.read()) != -1) {
-            this.stack.append(cur);
+            this.stack.add(cur);
 
             // Process existing states
             if (state == LexerState.BLOCK_COMMENT) {
-                if (this.stack.toString().endsWith("*/")) {
+                if (this.stack.endsWith("*/")) {
                     state = LexerState.CODE;
-                    this.stack = new StringBuilder();
+                    this.stack.clear();
                 }
+            } else if (state == LexerState.LINE_COMMENT) {
+                if (this.stack.endsWith("\n")) {
+                    state = LexerState.CODE;
+                }
+            } else if (state == LexerState.FUNCTION) {
+
+            } else if (state == LexerState.CLASS) {
+
             }
 
-            if (this.stack.toString().endsWith("/*"))
+            // Assume only code-state will get here
+            if (this.stack.endsWith("/*")) {
+                state = LexerState.BLOCK_COMMENT;
+            } else if (this.stack.endsWith("//")) {
+                state = LexerState.LINE_COMMENT;
+            }
 
 
         }

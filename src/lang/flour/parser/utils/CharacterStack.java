@@ -59,16 +59,24 @@ public class CharacterStack {
      * See if the characters on the stack end with a certain string
      *
      * @param str the string to compare against
-     * @return the
+     * @return true if the stack text ends with the given string, else false
      */
     public boolean endsWith(String str) {
         return this.toString().endsWith(str);
     }
 
+    /**
+     * Check if the stack is empty
+     *
+     * @return true if the stack is empty, else false
+     */
     public boolean isEmpty() {
         return this.list.isEmpty();
     }
 
+    /**
+     * @inherit-doc
+     */
     @Override
     public String toString() {
         // Add all the data in the list to a StringBuilder
@@ -78,5 +86,4 @@ public class CharacterStack {
         }
         return sb.toString();
     }
-
 }

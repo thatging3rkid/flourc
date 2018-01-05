@@ -9,20 +9,12 @@ c_import <stdlib.h> as c_stdlib
 
 public class string { // should implement the "is array" or "can iterate over" interface when it's ready
     private char *data = null;
-    private int length = 0;
+    viewable int length = 0;
 
     public string() {}
 
-    method int length() {
-        while true {
-
-        }
+    public method void add(char c) {
+        this.length += 1;
     }
 }
 
-/**
- * The purpose of the c string class is to interface with C libraries, so data should be stored in the flour.string
- */
-public class c_str { // also should implement the same interface as a string
-
-}
