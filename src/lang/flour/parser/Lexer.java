@@ -16,7 +16,7 @@ import java.util.List;
 public class Lexer {
 
     private enum LexerState {
-        CODE,  BLOCK_COMMENT, LINE_COMMENT
+        CODE,  BLOCK_COMMENT, LINE_COMMENT, PREPROCESSOR_STATEMENT
     }
 
     private FileReader reader;
@@ -53,9 +53,16 @@ public class Lexer {
                     state = LexerState.CODE;
                     continue;
                 }
+            } else if (state == LexerState.PREPROCESSOR_STATEMENT) {
+                if (cur == '\n') {
+                    if (this.stack.peek(0) == '\\') {
+                        
+                    }
+                }
             }
 
             // Assume only code-state will get here
+
             // Check for comments
             if (this.stack.endsWith("/*")) {
                 state = LexerState.BLOCK_COMMENT;
@@ -80,10 +87,31 @@ public class Lexer {
                 continue;
             }
 
-            // 
+            // Check for end-of-line
+            if (cur == ';') {
+                this.stack.clear(1); // get the semi-colon off the stack
+                if (!(this.stack.isAllWhitespace() || this.stack.isEmpty())) { // check to see if there is still stuff
+                    this.token_stream.add(new Token(this.stack.toString(), this.file_name, this.file_line,
+                            this.file_col - this.stack.toString().length()));
+                }
+                this.token_stream.add(new Token(";", this.file_name, this.file_line, this.file_col));
+                this.stack.clear();
+                continue;
+            }
+
+
 
             // Check for preprocessor statements
-            if
+            if (cur == '@') {
+                this.stack.clear(1); // get the semi-colon off the stack
+                if (!(this.stack.isAllWhitespace() || this.stack.isEmpty())) { // check to see if there is still stuff
+                    this.token_stream.add(new Token(this.stack.toString(), this.file_name, this.file_line,
+                            this.file_col - this.stack.toString().length()));
+                }
+                this.stack.clear();
+                this.stack.add('@');
+                state = LexerState.PREPROCESSOR_STATEMENT;
+            }
 
 
 
