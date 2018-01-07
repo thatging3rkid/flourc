@@ -8,6 +8,7 @@
 package lang.flour;
 
 import com.sun.istack.internal.NotNull;
+import lang.flour.parser.Lexer;
 import lang.flour.preprocessor.Preprocessor;
 
 import java.io.File;
@@ -42,7 +43,8 @@ public class flourc {
             }
 
             try {
-                Preprocessor fpp = new Preprocessor(temp);
+                Lexer l = new Lexer(temp);
+                System.out.println(l.getTokenStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }

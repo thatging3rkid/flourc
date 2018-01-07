@@ -28,4 +28,10 @@ public class Token {
     public int getFile_col() {
         return file_col;
     }
+
+    @Override
+    public String toString() {
+
+        return "`" + this.text + "`:" + this.file_name + ":" + this.file_line + ":" + this.file_col;
+    }
 }

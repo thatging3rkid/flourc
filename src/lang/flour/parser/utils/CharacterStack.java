@@ -103,6 +103,19 @@ public class CharacterStack {
     }
 
     /**
+     * Remove all whitespace characters from the stack
+     */
+    public void removeWhitespace() {
+        List<Character> temp_list = new ArrayList<>();
+        for (int i = 0; i < this.list.size(); i += 1) {
+            if (!LexerUtils.isWhitespace(this.list.get(i))) {
+                temp_list.add(this.list.get(i));
+            }
+        }
+        this.list = temp_list;
+    }
+
+    /**
      * @inherit-doc
      */
     @Override
