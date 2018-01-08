@@ -99,13 +99,9 @@ public class Lexer {
                             this._codeprocess();
                         }
                     }
-                    // After the loop is broken, add a newline character to the token stream
-                    this.token_stream.add(new Token("\n", this.file_name, this.file_line, this.file_col));
-
-                    if (cur == -1) {
-                        break;
-                    }
                 }
+                // After the loop is broken, add a newline character to the token stream
+                this.token_stream.add(new Token("\n", this.file_name, this.file_line, this.file_col));
                 continue;
             }
 
@@ -144,13 +140,12 @@ public class Lexer {
                 continue;
             }
 
-            // At this point, clean up the stack
-            if (this.stack.isAllWhitespace()) {
-                this.stack.clear();
-            }
-
             // Generic code processing
             this._codeprocess();
+
+            if (this.stack.isAllWhitespace()) {
+                this.stack.removeWhitespace();
+            }
         }
     }
 
@@ -159,17 +154,27 @@ public class Lexer {
         Character past = this.stack.peek(1);
         String combined = past.toString() + cur.toString();
 
+        // Check for a space (which separates variables
+        if (cur == ' ') {
+            this._cleanstack(1);
+            return;
+        }
+
         // generic single character token
         if (cur == '(' || cur == ')' // parenthesis (order-of-operations)
             || cur == '[' || cur == ']' // brackets (array dereferencing)
             || cur == '.' // dot (accessing)
             || cur == '~' // tilde (bitwise NOT)
             || cur == '?' || cur == ':' // ternary operator (thing? true_action() : false_action();)
-            || cur == ' ' // space
-            || past == 0 // only one character on the stack
+            || cur == ',' // comma for separation
             ) {
             this._cleanstack(1);
             this.token_stream.add(new Token(cur.toString(), this.file_name, this.file_line, this.file_col));
+            return;
+        }
+
+        // make sure there are enough arguments for dual-char operators
+        if (past == 0) {
             return;
         }
 

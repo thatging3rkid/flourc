@@ -32,6 +32,6 @@ public class Token {
     @Override
     public String toString() {
 
-        return "`" + this.text + "`:" + this.file_name + ":" + this.file_line + ":" + this.file_col;
+        return "`" + this.text.replace("\n", "\\n") + "`:" + this.file_name + ":" + this.file_line + ":" + this.file_col;
     }
 }
