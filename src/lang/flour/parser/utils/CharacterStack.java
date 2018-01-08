@@ -116,6 +116,15 @@ public class CharacterStack {
     }
 
     /**
+     * Get the current number of characters on the stack
+     *
+     * @return the current number of characters on the stack
+     */
+    public int size() {
+        return this.list.size();
+    }
+
+    /**
      * @inherit-doc
      */
     @Override
