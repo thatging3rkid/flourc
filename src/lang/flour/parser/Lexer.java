@@ -17,7 +17,7 @@ import java.util.List;
 public class Lexer {
 
     private enum LexerState {
-        CODE,  BLOCK_COMMENT, LINE_COMMENT, PREPROCESSOR_STATEMENT
+        CODE,  BLOCK_COMMENT, LINE_COMMENT, PREPROCESSOR_STATEMENT, STRING_LITERAL
     }
 
     private FileReader reader;
@@ -73,7 +73,7 @@ public class Lexer {
 
                     // check for an end of line (and break if found and not escaped)
                     if (cur == '\n' || this.stack.toString().endsWith("//")) {
-                        if (this.stack.peek(0) == '\\') {
+                        if (this.stack.peek(1) == '\\') {
                             this.stack.clear(2);
                         } else {
                             // just in case the preprocessor call is a single line
@@ -101,12 +101,49 @@ public class Lexer {
                     }
                 }
                 // After the loop is broken, add a newline character to the token stream
+                this._cleanstack(0);
                 this.token_stream.add(new Token("\n", this.file_name, this.file_line, this.file_col));
+                continue;
+            } else if (state == LexerState.STRING_LITERAL) {
+                // continue reading in characters until the end of string is reached
+                while (true) {
+                    cur_i = this._readnext();
+
+                    // check for end-of-line
+                    if (cur_i == -1) {
+                        break;
+                    }
+
+                    cur = (char) cur_i;
+                    char prev = this.stack.peek(1);
+
+                    // check for an end-of-string
+                    if (cur == '\"') {
+                        if (prev != '\\') {
+                            // do a manual _clearstack
+                            // start by getting the " off the stack
+                            this.stack.clear(1);
+
+                            // add all the string data in it's raw form
+                            this.token_stream.add(new Token(this.stack.toString(), this.file_name,
+                                this.file_line, this.file_col));
+                            // then clear the stack
+                            this.stack.clear();
+
+                            state = LexerState.CODE;
+                            break;
+                        } else {
+                            // clean up the string so I don't have to remove the character later
+                            this.stack.clear(2);
+                            this.stack.add('\"');
+                        }
+                    }
+                }
+                this.token_stream.add(new Token("\"", this.file_name, this.file_line, this.file_col));
                 continue;
             }
 
             // Assume only code-state will get here
-
             // Check for comments
             if (this.stack.endsWith("/*")) {
                 state = LexerState.BLOCK_COMMENT;
@@ -123,12 +160,10 @@ public class Lexer {
                     this.stack.clear();
                 }
                 continue;
-            }
-
-            // Check for end-of-line
-            if (cur == ';') {
+            } else if (this.stack.endsWith("\"")) {
+                state = LexerState.STRING_LITERAL;
                 this._cleanstack(1);
-                this.token_stream.add(new Token(";", this.file_name, this.file_line, this.file_col));
+                this.token_stream.add(new Token("\"", this.file_name, this.file_line, this.file_col));
                 continue;
             }
 
@@ -167,6 +202,7 @@ public class Lexer {
             || cur == '~' // tilde (bitwise NOT)
             || cur == '?' || cur == ':' // ternary operator (thing? true_action() : false_action();)
             || cur == ',' // comma for separation
+            || cur == ';' // end-of-line delimiter
             ) {
             this._cleanstack(1);
             this.token_stream.add(new Token(cur.toString(), this.file_name, this.file_line, this.file_col));
