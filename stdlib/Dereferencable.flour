@@ -1,0 +1,8 @@
+/**
+ * stdlib/Dereferencable.flour
+ *
+ * I should probably come up with a shorter (and easier to type) name
+ */
+public interface Dereferencable<T> {
+    public method T __deref__(int num);
+}

@@ -1,20 +1,104 @@
 /**
  * stdlib/string.flour
  *
- * This is a really early string class and will mostly be used for testing OOP lexing and code gen
+ * This is a sample of the full-fledged string class used in the standard library. For now, this serves more of a language reference, than a complete class.
  *
  * @author Connor Henley, @thatging3rkid
  */
 c_import <stdlib.h> as c_stdlib
 
-public class string { // should implement the "is array" or "can iterate over" interface when it's ready
+public class string implements Dereferencable<char> {
     private char *data = null;
     viewable int length = 0;
 
-    public string() {}
+    public string(char * r_string) {
+        // First, find the length of the string
+        this.length = 0;
+        while (true) {
+            if (r_string[i] == 0) {
+                break;
+            }
+            this.length += 1;
+        }
 
-    public method void add(char c) {
-        this.length += 1;
+        // Next, get some memory for the string
+        this.data = c_stdlib.malloc(this.length + 1); // assuming chars are one byte and not using unicode characters (should implement later)
+        for (int i = 0; i < this.length; i += 1) {
+            this.data[i] = r_string[i];
+        }
+        this.data[this.length + 1] = 0; // null terminate
     }
+
+    public string concat(string s2) {
+        // Make a temp space for the string to be made
+        char * temp = c_stdlib.malloc(sizeof(char) * (this.length + s2.length + 1));
+        // Copy data to the temp location
+        for (int i = 0; i < this.length; i += 1) {
+            temp[i] = this.data[i];
+        } // should investigate using c_stdlib.memcpy
+        for (int j = 0; j < s2.length; j += 1) {
+            temp[this.length + j] = s2[j]
+        }
+
+        // Make the output object
+        string output = new string(temp);
+        c_stdlib.free(temp); // free the memory
+
+        return output;
+    }
+
+    /**
+     *
+     * @note this method allocates memory for the C string, so you must free it (for now?!?) using C's stdlib.free function
+     *
+     * @return a pointer to a C string that contains a copy of the current contents of the string
+     */
+    public char * as_cstring() {
+        // Make space for the string
+        char * temp = c_stdlib.malloc(this.length + 1); // add this to a list of stuff that needs to be free'd on exit?
+
+        for (int i = 0; i < this.length; i += 1) {
+            temp[i] = this.data[i];
+        }
+
+        temp[this.length] = 0; // null terminate
+
+        return temp;
+    }
+
+    public char __deref__(int num) {
+        if (num >= this.length || 0 > num) {
+            raise OutOfBoundsException("`" + num + "` is out-of-range for a string of length `" + this.length + "`");
+        }
+        return this.data[num];
+    }
+
+    public void __free__() { // __free__ is a method that is called on deconstruction of objects, and should only be used by objects that allocate their own memory (as flour objects should be auto-alloc'd and free'd)
+        c_stdlib.free(this.data);
+    }
+}
+
+string __add__(string s1, string s2) {
+    // Make a temp space for the string to be made
+    char * temp = c_stdlib.malloc(sizeof(char) * (s1.length + s2.length + 1));
+
+    // Copy data to the temp location
+    for (int i = 0; i < this.length; i += 1) {
+        temp[i] = s1[i];
+    } // should investigate using c_stdlib.memcpy
+    for (int j = 0; j < s2.length; j += 1) {
+        temp[this.length + j] = s2[j]
+    }
+
+    // Make the output object
+    string output = new string(temp);
+    c_stdlib.free(temp); // free the memory
+
+    return output;
+}
+
+string __add__(string s1, int i2) {
+    string i2_str = IntegerUtils.IntToString(i2);
+    return __add__(s1, i2_str);
 }
 
