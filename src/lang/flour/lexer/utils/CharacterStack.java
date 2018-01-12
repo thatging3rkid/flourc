@@ -5,7 +5,7 @@
  *
  * @author Connor Henley, @thatging3rkid
  */
-package lang.flour.parser.utils;
+package lang.flour.lexer.utils;
 
 import java.util.ArrayList;
 import java.util.List;

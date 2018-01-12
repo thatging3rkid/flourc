@@ -5,10 +5,10 @@
  *
  * @author Connor Henley, @thatging3rkid
  */
-package lang.flour.parser;
+package lang.flour.lexer;
 
-import lang.flour.parser.utils.CharacterStack;
-import lang.flour.parser.utils.LexerUtils;
+import lang.flour.lexer.utils.CharacterStack;
+import lang.flour.lexer.utils.LexerUtils;
 
 import java.io.*;
 import java.util.ArrayList;

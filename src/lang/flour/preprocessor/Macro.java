@@ -2,7 +2,7 @@ package lang.flour.preprocessor;
 
 import java.util.ArrayList;
 import java.util.List;
-import lang.flour.parser.Token;
+import lang.flour.lexer.Token;
 
 public class Macro {
     private String name;

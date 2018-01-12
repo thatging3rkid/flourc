@@ -1,4 +1,4 @@
-package lang.flour.parser;
+package lang.flour.lexer;
 
 public class Token {
     private String text;

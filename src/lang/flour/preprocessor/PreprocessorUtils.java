@@ -1,6 +1,6 @@
 package lang.flour.preprocessor;
 
-import lang.flour.parser.Token;
+import lang.flour.lexer.Token;
 
 public class PreprocessorUtils {
 

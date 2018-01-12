@@ -1,4 +1,4 @@
-package lang.flour.parser.utils;
+package lang.flour.lexer.utils;
 
 public class LexerUtils {
 

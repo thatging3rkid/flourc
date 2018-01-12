@@ -8,8 +8,8 @@
 package lang.flour;
 
 import com.sun.istack.internal.NotNull;
-import lang.flour.parser.Lexer;
-import lang.flour.parser.Token;
+import lang.flour.lexer.Lexer;
+import lang.flour.lexer.Token;
 import lang.flour.preprocessor.Preprocessor;
 
 import java.io.File;

@@ -2,9 +2,8 @@ package lang.flour.preprocessor;
 
 import java.util.Collections;
 import java.util.Map;
-import lang.flour.parser.Token;
+import lang.flour.lexer.Token;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -128,10 +127,8 @@ public class Preprocessor {
                     } else {
                         token_stream.add(i + j, t);
                     }
-
                 }
             }
-
         }
     }
 
