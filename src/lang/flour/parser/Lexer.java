@@ -182,6 +182,12 @@ public class Lexer {
                 this.stack.removeWhitespace();
             }
         }
+
+        if (!this.stack.isEmpty()) {
+            this.stack.removeWhitespace();
+            this.token_stream.add(new Token(this.stack.toString(), this.file_name, this.file_line, this.file_col));
+            this.stack.clear();
+        }
     }
 
     private void _codeprocess() {
@@ -198,6 +204,7 @@ public class Lexer {
         // generic single character token
         if (cur == '(' || cur == ')' // parenthesis (order-of-operations)
             || cur == '[' || cur == ']' // brackets (array dereferencing)
+            || cur == '{' || cur == '}' // braces for code sorting
             || cur == '.' // dot (accessing)
             || cur == '~' // tilde (bitwise NOT)
             || cur == '?' || cur == ':' // ternary operator (thing? true_action() : false_action();)
