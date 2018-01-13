@@ -10,6 +10,7 @@ package lang.flour;
 import com.sun.istack.internal.NotNull;
 import lang.flour.lexer.Lexer;
 import lang.flour.lexer.Token;
+import lang.flour.parser.Parser;
 import lang.flour.preprocessor.Preprocessor;
 
 import java.io.File;
@@ -44,10 +45,7 @@ public class flourc {
             }
 
             try {
-                Lexer l = new Lexer(temp);
-                System.out.println(l.getTokenStream());
-                List<Token> preprocessed = l.getTokenStream(); // make sure to keep a pointer to the preprocessed token stream
-                Preprocessor pp = new Preprocessor(preprocessed);
+                Parser parser = new Parser(temp);
 
             } catch (IOException e) {
                 e.printStackTrace();
