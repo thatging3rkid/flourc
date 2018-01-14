@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class flourc {
+    public static final String LIBFLOUR_LOCATION = "stdlib/";
+
     public static void main(@NotNull String[] args) {
 
         // Make sure there are some parameters
@@ -45,7 +47,7 @@ public class flourc {
             }
 
             try {
-                Parser parser = new Parser(temp);
+                Parser parser = new Parser(temp, false);
 
             } catch (IOException e) {
                 e.printStackTrace();

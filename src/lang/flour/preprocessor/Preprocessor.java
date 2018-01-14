@@ -14,7 +14,7 @@ public class Preprocessor {
         DEFINE_STARTED, DEFINE_NAMED, DEFINE_PARAMS, DEFINE_CODE, UNDEF_STARTED
     }
 
-    public Preprocessor(List<Token> token_stream) {
+    public Preprocessor(List<Token> token_stream, boolean included) {
         Token cur_tok = null;
         Token old_tok = null;
         PreprocessorState state = null;
@@ -22,6 +22,11 @@ public class Preprocessor {
         Map<Integer, Macro> marks = new Hashtable<>();
         Map<String, Macro> macros = new Hashtable<>();
         Macro c_macro = null;
+
+        // add the __included tag
+        List<Token> included_replacement = new ArrayList<>();
+        included_replacement.add(new Token((included)? "true" : "false", "flourc.preprocessor", -1, -1));
+        macros.put("__included__", new Macro("__included__", null, included_replacement));
 
         // Go over all the tokens
         for (int i = 0; i < token_stream.size(); i += 1) {
@@ -79,7 +84,12 @@ public class Preprocessor {
                         }
                         break;
                     case UNDEF_STARTED:
-                        macros.remove(cur_tok.getText());
+                        if (cur_tok.getText().equals("__included__")) {
+                            this._print_error(cur_tok.getFile_name(), cur_tok.getFile_line(), "__included__ cannot be undefined, continuing");
+                        } else {
+                            macros.remove(cur_tok.getText());
+                            state = null;
+                        }
                         break;
                 }
             } else {
