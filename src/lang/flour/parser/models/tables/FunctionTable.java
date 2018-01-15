@@ -17,7 +17,15 @@ public class FunctionTable {
     }
 
     public void addFuction(String precall, List<Token> tokens) {
+        System.err.println("not implemented");
+    }
 
+    public void addTable(FunctionTable ft) {
+        System.err.println("not implemented");
+    }
+
+    public void addTable(FunctionTable ft, String precall) {
+        System.err.println("not implemented");
     }
 
     public boolean isValid(String precall, String name) {

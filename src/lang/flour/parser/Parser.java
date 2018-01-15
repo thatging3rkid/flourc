@@ -19,7 +19,7 @@ public class Parser {
 
     private enum ParserState {
         NONE, // nothing found on this line so far
-        INCLUDE_STARTED, // include keyword found, anything after it is data to be included (one include link per line for now)
+        INCLUDE_STARTED, INCLUDE_AS, // include keyword found, anything after it is data to be included (one include link per line for now)
         C_INCLUDE_STARTED, // c_include found, send anything after it (until a newline) to the header parser
 
 
@@ -32,6 +32,7 @@ public class Parser {
 
         ParserState state = ParserState.NONE;
         Stack<Token> token_stack = new Stack<>();
+        int ts_mark = 0;
         for (Token t : token_stream) {
             // Process the state machine
             if (state != ParserState.NONE) {
@@ -39,14 +40,47 @@ public class Parser {
                     case INCLUDE_STARTED:
                         // Check for the escape character
                         if (t.getText().equals(";")) {
+                            // convert the stack to an array
                             Token[] temp = new Token[token_stack.size()];
                             token_stack.toArray(temp);
+
+                            // Parse the given file
                             Parser sub = new Parser(Arrays.asList(temp));
+                            this.ft.addTable(sub.getFunctionTable());
                             state = ParserState.NONE;
+                        } else if (t.getText().equals("as")) {
+                            state = ParserState.INCLUDE_AS;
+                            ts_mark = token_stack.size() - 1; // mark the end of the include path
+
+                            // Make sure the stack is not empty, if so, print an error message and add it to the error stack
+                            if (token_stack.size() == 0) {
+                                this._print_error(t.getFile_name(), t.getFile_line(), "include length 0");
+                                Parser.error_stack.add("include length 0");
+                            }
                         } else {
                             token_stack.add(t);
                         }
+                        break;
+                    case INCLUDE_AS:
+                        // Check for end of line
+                        if (t.getText().equals(";")) {
+                            Token[] full = new Token[token_stack.size()];
+                            token_stack.toArray(full);
 
+                            // Get the path and name from the token stack
+                            List<Token> path = Arrays.asList(full).subList(0, ts_mark);
+                            List<Token> name = Arrays.asList(full).subList(ts_mark, full.length - 1);
+                            StringBuilder sb_precall = new StringBuilder();
+
+                            for (Token st : name) {
+                                sb_precall.append(st.getText());
+                            }
+
+                            // Add the table to the current table
+                            this.ft.addTable(new Parser(path).getFunctionTable(), sb_precall.toString());
+                        } else {
+                            token_stack.add(t);
+                        }
                         break;
                     case C_INCLUDE_STARTED:
                         break;
@@ -86,7 +120,7 @@ public class Parser {
             if (t.getText().equals(".")) {
                 sb.append(File.separator);
             } else if (t.getText().equals("as")) {
-                
+
             } else {
                 sb.append(t.getText());
             }
