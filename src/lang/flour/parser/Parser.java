@@ -83,6 +83,12 @@ public class Parser {
                         }
                         break;
                     case C_INCLUDE_STARTED:
+                        if (t.getText().equals(";")) {
+                            Token[] full = new Token[token_stack.size()];
+                            token_stack.toArray(full);
+
+                            
+                        }
                         break;
                 }
             } else {

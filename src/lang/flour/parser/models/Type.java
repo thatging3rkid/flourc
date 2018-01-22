@@ -12,13 +12,18 @@ public class Type implements Comparable<Type> {
     public Type(String name) {
         Objects.requireNonNull(name); // fancy java code here
         this.name = name;
-        this.size = VOID_PTR_SIZE; // assming the default
+        this.size = VOID_PTR_SIZE; // assuming x86_64
     }
 
     protected Type(String name, int size) {
         Objects.requireNonNull(name);
         this.name = name;
         this.size = size;
+    }
+
+    public Type(Type t) {
+        this.name = t.name;
+        this.size = t.size;
     }
 
     public String getName() {
