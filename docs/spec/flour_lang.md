@@ -31,7 +31,8 @@ The following tokens are operators in Flour:
 +  -  *  /  &  |  ^  %  << >>
 += -= *= /= &= |= ^= %= 
 
-``` (again, this list will be developed as the language progresses)
+```
+(again, this list will be developed as the language progresses)
 
 The following tokens act as seperators (the tokenizer splits code using them, but they are not used in assignment operations):
 
